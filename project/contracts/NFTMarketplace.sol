@@ -1,9 +1,8 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.0;
+pragma solidity >=0.4.22 <0.9.0;
 
 contract NFTMarketplace {
-    
-    mapping(address => uint) public purchasedCount;
+  mapping(address => uint) public purchasedCount;
     
     struct NFT {
         string name;
@@ -30,5 +29,15 @@ contract NFTMarketplace {
     
     function getNFTCount() public view returns (uint) {
         return nfts.length;
+    }
+
+    function getNFTs() public view returns (NFT[] memory) {
+        return nfts;
+    }
+
+    function getNFTbyIndex(uint nftIndex) public view returns (string memory, string memory, uint) {
+        require(nftIndex < nfts.length, "Invalid NFT index");
+        NFT memory nft = nfts[nftIndex];
+        return (nft.name, nft.image, nft.price);
     }
 }
