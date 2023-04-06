@@ -35,6 +35,5 @@ Pour faire fonctionner le projet en local, il faut faire une compilation et une 
 
 Ensuite, il faut modifier dans `nftfront/src/main.js` la valeur de la variable `contract_adress` pour lier le contrat à Web3.
 
-Puis penser à modifier les adresses "from" du fichier `App.vue` avec une adresse valable fournie par Ganache.
 
 À la racine de `nftfront`, faire un `npm run serve` et se rendre sur http://localhost:8080/ pour utiliser l'application.
