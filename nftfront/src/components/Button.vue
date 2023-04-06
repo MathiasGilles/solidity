@@ -27,7 +27,7 @@ export default {
           await provider.request({ method: "eth_requestAccounts" });
           const accounts = await provider.request({ method: "eth_accounts" });
           this.currentAccount = accounts[0];
-          console.log("Connecté à Metamask");
+          console.log("Connecté à Metamask", this.currentAccount);
           this.$forceUpdate();
         } catch (error) {
           console.error(error);

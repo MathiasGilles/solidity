@@ -10,6 +10,7 @@
   "dependencies": {
     "@metamask/detect-provider": "^2.0.0",
     "core-js": "^3.6.5",
+    "ganache": "^7.7.7",
     "vue": "^2.6.11",
     "web3": "^1.9.0"
   },
