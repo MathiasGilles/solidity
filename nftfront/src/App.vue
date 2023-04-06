@@ -1,39 +1,38 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <Button></Button>
-    <button @click="getNFTCount">getNFTCount test</button>
-    <button @click="addNFT">addNFT test</button>
-    <button @click="getNFTbyIndex">getNFTbyIndex test</button>
-    <button @click="getNFTs">getNFTs test</button>
-    <button @click="getOwnedNFT">getOwnedNFT test</button>
+    <button v-if="!this.currentAccount" @click="connectMetamask">CONNECT </button>
+    <div v-if="this.currentAccount">
+      <button @click="addNFT">ADD</button>
+      <button @click="getNFTbyIndex">GET BY INDEX</button>
+      <button @click="getNFTs">GET ALL</button>
+      <button @click="getOwnedNFT">GET OWNED</button>
+    </div>
     <div class="card__container" >
       <div v-for="nft, index in nfts" :key="index" class="card">
         <p>Name : {{nft.name}}</p>
         <p>Image : {{nft.image}}</p>
         <p>price : {{nft.price}}</p>
-        <button @click="buyNFT(index)">buy</button>
+        <button v-if="nft.owner === '0x0000000000000000000000000000000000000000'" @click="buyNFT(index)">buy</button>
+        <img class="image" :src="`/${nft.image}`" alt="nft image">
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import Button from './components/Button.vue'
+import detectEthereumProvider from "@metamask/detect-provider";
 
 export default {
   name: 'App',
-  components: {
-    Button
-  },
   data(){
     return{
-      nfts: []
+      nfts: [],
+      currentAccount: null,
     }
   },
   methods: {
     addNFT(){
-      this.$contract.methods.addNFT("test", "test", 10).send({from: "0x55554E17D541f8Ead78D1c2f2379349761bb3092"},
+      this.$contract.methods.addNFT("test", "1.jpg", 10).send({from: this.currentAccount},
         (res)=>{
           console.log(res)
           this.getNFTs()
@@ -52,7 +51,7 @@ export default {
       })
   },
   buyNFT(id){
-    this.$contract.methods.buyNFT(id).send({from: "0x55554E17D541f8Ead78D1c2f2379349761bb3092",value : this.nfts[id].price},
+    this.$contract.methods.buyNFT(id).send({from: this.currentAccount,value : this.nfts[id].price},
         (res)=>{
           console.log(res)
         })
@@ -65,11 +64,28 @@ export default {
       })
   },
   getOwnedNFT(){
-    this.$contract.methods.getNFTsByOwner().call().then(
+    this.$contract.methods.getNFTsByOwner(this.currentAccount).call().then(
       (res) =>{
-        console.log(res)
+        this.$set(this.$data, 'nfts', res)
       })
-  }
+  },
+
+  async connectMetamask() {
+      const provider = await detectEthereumProvider();
+      if (provider) {
+        try {
+          await provider.request({ method: "eth_requestAccounts" });
+          const accounts = await provider.request({ method: "eth_accounts" });
+          this.currentAccount = accounts[0];
+          console.log("Connecté à Metamask", this.currentAccount);
+          this.$forceUpdate();
+        } catch (error) {
+          console.error(error);
+        }
+      } else {
+        alert("Veuillez installer Metamask pour continuer");
+      }
+    },
   },
 
   mounted(){
@@ -98,5 +114,8 @@ export default {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
+}
+.image{
+  width: 100%;
 }
 </style>

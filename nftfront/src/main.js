@@ -6,7 +6,7 @@ import contract_abi from "../../build/contracts/NFTMarketplace.json";
 
 Vue.config.productionTip = false
 
-let contract_adress = "0x1D9A5857b7D890c085d930721D386cfDB04e92c2"
+let contract_adress = "0xbbC4ec231D9Ce995Ec42621Ccd05494046734620"
 const web3 = new Web3(window.ethereum);
 const contract = new web3.eth.Contract(contract_abi.abi, contract_adress)
 

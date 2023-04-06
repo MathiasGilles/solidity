@@ -47,7 +47,7 @@ contract NFTMarketplace {
         return (nft.name, nft.image, nft.price, nft.owner);
     }
 
-    function getNFTsByOwner() public view returns (NFT[] memory) {
-        return association[msg.sender].nfts;
+    function getNFTsByOwner(address sender) public view returns (NFT[] memory) {
+        return association[sender].nfts;
     }
 }
